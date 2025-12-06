@@ -1,5 +1,6 @@
 package model;
 
+
 public class Livro {
 
     public enum StatusLeitura {

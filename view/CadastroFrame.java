@@ -1,138 +1,126 @@
 package view;
 
-import repository.UsuarioRepository;
-import model.Usuario;
-
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import model.Usuario;
+import repository.bancoLivros;
+import repository.bancoUsuario;
 
 public class CadastroFrame extends JFrame {
 
-    public CadastroFrame(UsuarioRepository usuarioRepository) {
+    private bancoUsuario bancoUsuarios;
+    private bancoLivros bancoLivros; // para passar ao LoginFrame
 
-        // Configuração básica da janela
+    public CadastroFrame(bancoUsuario bancoUsuarios, bancoLivros bancoLivros) {
+        this.bancoUsuarios = bancoUsuarios;
+        this.bancoLivros = bancoLivros;
+
         setTitle("Criar Nova Conta");
-        setSize(900, 550);
+        setSize(900, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(null); // vamos posicionar manualmente para ficar igual ao design
+        setLayout(new BorderLayout());
+        setResizable(false);
 
-        // ===== PAINEL DE FUNDO =====
-        JPanel fundo = new JPanel();
-        fundo.setBackground(new Color(108, 119, 84)); // verde oliva
-        fundo.setBounds(0, 0, 900, 550);
-        fundo.setLayout(null);
-        add(fundo);
+        // Fundo igual ao LoginFrame
+        JPanel background = new JPanel();
+        background.setBackground(new Color(122, 140, 102));
+        background.setLayout(null);
+        add(background);
 
-        // ===== CARTÃO BRANCO COM CANTOS ARREDONDADOS =====
-        JPanel card = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(new Color(245, 244, 240)); // branco gelo
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
-            }
-        };
-        card.setOpaque(false);
+        // Card semelhante ao LoginFrame
+        RoundedPanel card = new RoundedPanel(40);
+        card.setBackground(Color.WHITE);
         card.setLayout(null);
-        card.setBounds(50, 30, 800, 480);
-        fundo.add(card);
+        card.setBounds(50, 50, 800, 500);
+        background.add(card);
 
-        // ===== TÍTULO =====
-        JLabel titulo = new JLabel("Criar uma conta nova");
-        titulo.setBounds(60, 40, 400, 40);
-        titulo.setFont(new Font("SansSerif", Font.BOLD, 28));
-        titulo.setForeground(new Color(92, 74, 50)); // marrom
+        // Títulos
+        JLabel titulo = new JLabel("Criar uma nova conta");
+        titulo.setFont(new Font("SansSerif", Font.BOLD, 30));
+        titulo.setForeground(new Color(60, 60, 60));
+        titulo.setBounds(80, 40, 500, 40);
         card.add(titulo);
 
-        JLabel loginLink = new JLabel("Já cadastrado? Faça Login");
-        loginLink.setBounds(60, 80, 300, 25);
+        JLabel loginLink = new JLabel("Já possui conta? Faça login");
         loginLink.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        loginLink.setForeground(new Color(92, 74, 50));
+        loginLink.setForeground(new Color(90, 120, 90));
+        loginLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        loginLink.setBounds(80, 80, 250, 20);
         card.add(loginLink);
 
-        // ===== CAMPOS =====
-        JLabel lblUsuario = new JLabel("USUÁRIO");
-        lblUsuario.setBounds(60, 130, 200, 20);
-        lblUsuario.setForeground(new Color(92, 74, 50));
-        lblUsuario.setFont(new Font("SansSerif", Font.BOLD, 12));
-        card.add(lblUsuario);
+        loginLink.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Passa os dois bancos para o LoginFrame
+                new LoginFrame(bancoUsuarios, bancoLivros).setVisible(true);
+                dispose();
+            }
+        });
+
+        // Labels e campos
+        JLabel lUsuario = new JLabel("USUÁRIO");
+        lUsuario.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        lUsuario.setForeground(new Color(80, 80, 80));
+        lUsuario.setBounds(80, 130, 200, 20);
+        card.add(lUsuario);
 
         JTextField campoUsuario = new JTextField();
-        campoUsuario.setBounds(60, 150, 300, 35);
+        campoUsuario.setBounds(80, 155, 260, 35);
+        campoUsuario.setBorder(new LineBorder(new Color(180, 180, 180)));
         card.add(campoUsuario);
 
-        JLabel lblEmail = new JLabel("EMAIL");
-        lblEmail.setBounds(60, 200, 200, 20);
-        lblEmail.setForeground(new Color(92, 74, 50));
-        lblEmail.setFont(new Font("SansSerif", Font.BOLD, 12));
-        card.add(lblEmail);
+        JLabel lEmail = new JLabel("EMAIL");
+        lEmail.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        lEmail.setForeground(new Color(80, 80, 80));
+        lEmail.setBounds(80, 205, 200, 20);
+        card.add(lEmail);
 
         JTextField campoEmail = new JTextField();
-        campoEmail.setBounds(60, 220, 300, 35);
+        campoEmail.setBounds(80, 230, 260, 35);
+        campoEmail.setBorder(new LineBorder(new Color(180, 180, 180)));
         card.add(campoEmail);
 
-        JLabel lblSenha = new JLabel("SENHA");
-        lblSenha.setBounds(60, 270, 200, 20);
-        lblSenha.setForeground(new Color(92, 74, 50));
-        lblSenha.setFont(new Font("SansSerif", Font.BOLD, 12));
-        card.add(lblSenha);
+        JLabel lSenha = new JLabel("SENHA");
+        lSenha.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        lSenha.setForeground(new Color(80, 80, 80));
+        lSenha.setBounds(80, 280, 200, 20);
+        card.add(lSenha);
 
         JPasswordField campoSenha = new JPasswordField();
-        campoSenha.setBounds(60, 290, 300, 35);
+        campoSenha.setBounds(80, 305, 260, 35);
+        campoSenha.setBorder(new LineBorder(new Color(180, 180, 180)));
         card.add(campoSenha);
 
-        JLabel lblData = new JLabel("DATA DE NASCIMENTO");
-        lblData.setBounds(60, 340, 300, 20);
-        lblData.setForeground(new Color(92, 74, 50));
-        lblData.setFont(new Font("SansSerif", Font.BOLD, 12));
-        card.add(lblData);
-
-        String[] datas = {"Select", "2000", "2001", "2002", "2003", "2004"};
-        JComboBox<String> comboData = new JComboBox<>(datas);
-        comboData.setBounds(60, 360, 300, 35);
-        card.add(comboData);
-
-        // ===== BOTÃO CADASTRAR =====
-        JButton btnCadastrar = new JButton("CADASTRAR") {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                // Cor do botão
-                g2.setColor(new Color(164, 125, 98)); // marrom claro
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
-
-                super.paintComponent(g);
-            }
-        };
-        btnCadastrar.setForeground(Color.WHITE);
-        btnCadastrar.setFont(new Font("SansSerif", Font.BOLD, 16));
-        btnCadastrar.setContentAreaFilled(false);
-        btnCadastrar.setBorderPainted(false);
+        // Botão de cadastro
+        JButton btnCadastrar = new JButton("CADASTRAR");
+        btnCadastrar.setBounds(80, 370, 260, 45);
         btnCadastrar.setFocusPainted(false);
-        btnCadastrar.setBounds(60, 415, 180, 40);
+        btnCadastrar.setForeground(Color.WHITE);
+        btnCadastrar.setFont(new Font("SansSerif", Font.BOLD, 15));
+        btnCadastrar.setBackground(new Color(118, 87, 67));
+        btnCadastrar.setBorder(new RoundedBorder(20));
         card.add(btnCadastrar);
 
-        // ===== PAINEL DA IMAGEM =====
-        JPanel painelImagem = new JPanel();
-        painelImagem.setBounds(400, 0, 400, 480);
-        painelImagem.setLayout(null);
+        // Imagem do lado direito
+        JLabel imgLabel = new JLabel();
+        imgLabel.setBounds(420, 40, 340, 420);
 
-        // A imagem você adiciona aqui depois:
-        // JLabel img = new JLabel(new ImageIcon("caminho/para/imagem.png"));
-        // img.setBounds(0, 0, 400, 480);
-        // painelImagem.add(img);
+        try {
+            ImageIcon img = new ImageIcon(getClass().getResource("/imagens/girl.png"));
+            Image scaled = img.getImage().getScaledInstance(340, 420, Image.SCALE_SMOOTH);
+            imgLabel.setIcon(new ImageIcon(scaled));
+        } catch (Exception e) {
+            imgLabel.setText("Adicione sua imagem em /assets/cadastro.png");
+            imgLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        }
 
-        card.add(painelImagem);
+        card.add(imgLabel);
 
-        // ===== FUNÇÃO DO BOTÃO =====
-        btnCadastrar.addActionListener((ActionEvent e) -> {
-
+        // Ação do botão
+        btnCadastrar.addActionListener(e -> {
             String nome = campoUsuario.getText().trim();
             String email = campoEmail.getText().trim();
             String senha = new String(campoSenha.getPassword());
@@ -142,17 +130,45 @@ public class CadastroFrame extends JFrame {
                 return;
             }
 
-            if (usuarioRepository.emailJaExiste(email)) {
+            if (bancoUsuarios.emailJaExiste(email)) {
                 JOptionPane.showMessageDialog(this, "Esse email já está cadastrado.");
                 return;
             }
 
-            usuarioRepository.adicionar(new Usuario(nome, email, senha));
+            bancoUsuarios.adicionar(new Usuario(nome, email, senha));
             JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!");
 
-            // voltar para a tela de login
-            new LoginFrame(usuarioRepository).setVisible(true);
+            // abre LoginFrame com os dois bancos
+            new LoginFrame(bancoUsuarios, bancoLivros).setVisible(true);
             dispose();
         });
+
+        setVisible(true);
+    }
+
+    // Painel arredondado
+    class RoundedPanel extends JPanel {
+        private int radius;
+
+        public RoundedPanel(int r) { this.radius = r; }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(getBackground());
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
+        }
+    }
+
+    // Borda arredondada
+    class RoundedBorder extends LineBorder {
+        private int arc;
+
+        public RoundedBorder(int arc) {
+            super(new Color(118, 87, 67), 1, true);
+            this.arc = arc;
+        }
     }
 }

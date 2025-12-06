@@ -2,12 +2,11 @@ package repository;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import model.Usuario;
 
 public class bancoUsuario {
 
-    private List<Usuario> usuarios;
+    private List< Usuario> usuarios;
 
     public bancoUsuario() {
         this.usuarios = new ArrayList<>();

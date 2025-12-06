@@ -77,10 +77,4 @@ public class Livro implements Serializable{
     public void setCaminhoArquivo(String caminhoArquivo) {
         this.caminhoArquivo = caminhoArquivo;
     }
-    
-    //Remover livro
-    public void remover(Livro livro) {
-        livros.remove(livro);
-        salvar();
-    }
 }

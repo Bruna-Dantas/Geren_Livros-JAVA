@@ -1,9 +1,8 @@
 package view;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-
+import javax.swing.*;
+import java.awt.event.ActionEvent; // Para o ActionListener
 import model.Livro;
 import repository.bancoLivros;
 
@@ -11,112 +10,213 @@ public class DetalhesLivroFrame extends JFrame {
 
     private Livro livro;
     private bancoLivros banco;
+    private TelaPrincipalFrame telaPrincipal;
 
-    public DetalhesLivroFrame(Livro livro, bancoLivros banco) {
+    // Campos de edição
+    private JTextArea campoOpiniao;
+    private JComboBox<String> comboStatus;
+    private JComboBox<Integer> comboAvaliacao;
+
+    public DetalhesLivroFrame(Livro livro, bancoLivros banco, TelaPrincipalFrame telaPrincipal) {
         this.livro = livro;
         this.banco = banco;
+        this.telaPrincipal = telaPrincipal;
 
-        setTitle("Detalhes do Livro");
-        setSize(900, 550);
+        setTitle("Detalhes: " + livro.getTitulo());
+        setSize(750, 600); // Aumentado para caber mais campos
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(null);
-        getContentPane().setBackground(Color.decode("#e8e8e8"));
+        setResizable(false);
+        getContentPane().setBackground(Color.decode("#f5f4f0")); 
 
-        JPanel painel = new JPanel();
-        painel.setLayout(null);
-        painel.setBounds(120, 40, 650, 450);
-        painel.setBackground(Color.WHITE);
-        painel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true));
-        add(painel);
+        setLayout(new BorderLayout());
+        
+        JPanel painelDetalhes = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
+        painelDetalhes.setBackground(Color.decode("#f5f4f0"));
+        
+        JLabel capaLabel = criarPainelCapa();
+        painelDetalhes.add(capaLabel);
+        
+        JPanel infoPanel = criarPainelInfo();
+        painelDetalhes.add(infoPanel);
 
-        // CAPA
+        add(painelDetalhes, BorderLayout.CENTER);
+        
+        // Adiciona o painel de botões no rodapé
+        add(criarPainelBotoes(), BorderLayout.SOUTH); 
+    }
+    
+    // Método auxiliar para criar e configurar a Capa (inalterado)
+    private JLabel criarPainelCapa() {
+        // ... (código do criarPainelCapa inalterado)
         JLabel capaLabel = new JLabel();
+        capaLabel.setPreferredSize(new Dimension(180, 270));
         capaLabel.setOpaque(true);
         capaLabel.setBackground(Color.LIGHT_GRAY);
-        capaLabel.setBounds(40, 40, 200, 300);
         capaLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        capaLabel.setVerticalAlignment(SwingConstants.CENTER);
-
-        if (livro.getCaminhoCapa() != null) {
-            ImageIcon img = new ImageIcon(
-                new ImageIcon(livro.getCaminhoCapa()).getImage()
-                .getScaledInstance(200, 300, Image.SCALE_SMOOTH)
-            );
-            capaLabel.setIcon(img);
-            capaLabel.setText("");
+        
+        if (livro.getCaminhoArquivo() != null) {
+            try {
+                ImageIcon icon = new ImageIcon(livro.getCaminhoArquivo());
+                Image img = icon.getImage().getScaledInstance(180, 270, Image.SCALE_SMOOTH);
+                capaLabel.setIcon(new ImageIcon(img));
+                capaLabel.setText("");
+            } catch (Exception ignored) {
+                 capaLabel.setText("Capa não encontrada");
+            }
         } else {
-            capaLabel.setText("Sem capa");
+            capaLabel.setText("Sem Capa");
         }
-        painel.add(capaLabel);
-
-        // TÍTULO
-        JLabel lblTitulo = new JLabel("Título:");
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblTitulo.setBounds(270, 40, 200, 30);
-        painel.add(lblTitulo);
-
-        JLabel tituloValor = new JLabel(livro.getTitulo());
-        tituloValor.setFont(new Font("Segoe UI", Font.PLAIN, 19));
-        tituloValor.setBounds(270, 75, 350, 30);
-        painel.add(tituloValor);
-
-        // AUTOR
-        JLabel lblAutor = new JLabel("Autor:");
-        lblAutor.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblAutor.setBounds(270, 130, 200, 30);
-        painel.add(lblAutor);
-
-        JLabel autorValor = new JLabel(livro.getAutor());
-        autorValor.setFont(new Font("Segoe UI", Font.PLAIN, 19));
-        autorValor.setBounds(270, 165, 350, 30);
-        painel.add(autorValor);
-
-        // GÊNERO
-        JLabel lblGenero = new JLabel("Gênero:");
-        lblGenero.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblGenero.setBounds(270, 220, 200, 30);
-        painel.add(lblGenero);
-
-        JLabel generoValor = new JLabel(livro.getGenero());
-        generoValor.setFont(new Font("Segoe UI", Font.PLAIN, 19));
-        generoValor.setBounds(270, 255, 350, 30);
-        painel.add(generoValor);
-
-        // BOTÃO REMOVER
-        JButton btnRemover = new JButton("Remover Livro");
-        btnRemover.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        btnRemover.setBackground(new Color(200, 50, 50));
-        btnRemover.setForeground(Color.WHITE);
-        btnRemover.setFocusPainted(false);
-        btnRemover.setBounds(330, 350, 220, 45);
-        painel.add(btnRemover);
-
-        btnRemover.addActionListener(e -> removerLivro());
-
-        // BOTÃO VOLTAR
-        JButton btnVoltar = new JButton("Voltar");
-        btnVoltar.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        btnVoltar.setBackground(Color.decode("#d1d1d1"));
-        btnVoltar.setFocusPainted(false);
-        btnVoltar.setBounds(200, 350, 120, 45);
-        painel.add(btnVoltar);
-
-        btnVoltar.addActionListener(e -> dispose());
+        return capaLabel;
     }
 
-    private void removerLivro() {
+    // Método auxiliar para criar e configurar as Informações (MODIFICADO)
+    private JPanel criarPainelInfo() {
+        JPanel info = new JPanel();
+        info.setPreferredSize(new Dimension(480, 500)); // Tamanho ajustado
+        info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+        info.setBackground(Color.decode("#f5f4f0"));
+        
+        // Título e Autor
+        JLabel titulo = new JLabel("<html><p style='width:350px'><b>" + livro.getTitulo() + "</b></p></html>");
+        titulo.setFont(new Font("SansSerif", Font.BOLD, 24));
+        titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        info.add(titulo);
+        info.add(Box.createRigidArea(new Dimension(0, 5)));
+
+        JLabel autor = new JLabel("Por: " + livro.getAutor());
+        autor.setFont(new Font("SansSerif", Font.ITALIC, 16));
+        autor.setAlignmentX(Component.LEFT_ALIGNMENT);
+        info.add(autor);
+        info.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        // Gênero
+        adicionarLabelCampo(info, "Gênero:", livro.getGenero());
+
+        // --- Campos EDITÁVEIS ---
+        
+        // 1. Status de Leitura
+        adicionarLabel(info, "Status:");
+        comboStatus = new JComboBox<>(new String[]{
+            "NAO_INICIADO", "EM_ANDAMENTO", "FINALIZADO"
+        });
+        comboStatus.setSelectedItem(livro.getStatus().toString());
+        configurarCampo(comboStatus);
+        info.add(comboStatus);
+
+        // 2. Avaliação (Estrelas)
+        adicionarLabel(info, "Avaliação (0-5):");
+        comboAvaliacao = new JComboBox<>(new Integer[]{0, 1, 2, 3, 4, 5});
+        comboAvaliacao.setSelectedItem(livro.getAvaliacao());
+        configurarCampo(comboAvaliacao);
+        info.add(comboAvaliacao);
+
+        // 3. Opinião
+        adicionarLabel(info, "Opinião:");
+        campoOpiniao = new JTextArea(livro.getOpiniao());
+        campoOpiniao.setLineWrap(true);
+        campoOpiniao.setWrapStyleWord(true);
+        campoOpiniao.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        campoOpiniao.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        
+        JScrollPane scrollOpiniao = new JScrollPane(campoOpiniao);
+        scrollOpiniao.setPreferredSize(new Dimension(450, 100));
+        scrollOpiniao.setAlignmentX(Component.LEFT_ALIGNMENT);
+        info.add(scrollOpiniao);
+        
+        return info;
+    }
+
+    // Método para configurar o painel de botões Salvar e Remover
+    private JPanel criarPainelBotoes() {
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
+        painelBotoes.setBackground(Color.decode("#f5f4f0"));
+        
+        // Botão Salvar Alterações
+        JButton btnSalvar = new JButton("Salvar Alterações");
+        btnSalvar.setFont(new Font("SansSerif", Font.BOLD, 18));
+        btnSalvar.setBackground(new Color(70, 130, 180)); // Azul
+        btnSalvar.setForeground(Color.WHITE);
+        btnSalvar.setPreferredSize(new Dimension(200, 45));
+        btnSalvar.addActionListener(this::acaoSalvarAlteracoes);
+        painelBotoes.add(btnSalvar);
+        
+        // Botão Remover Livro
+        JButton btnRemover = new JButton("Remover Livro");
+        btnRemover.setFont(new Font("SansSerif", Font.BOLD, 18));
+        btnRemover.setBackground(new Color(200, 70, 70)); // Vermelho
+        btnRemover.setForeground(Color.WHITE);
+        btnRemover.setPreferredSize(new Dimension(200, 45));
+        btnRemover.addActionListener(this::acaoRemoverLivro);
+        painelBotoes.add(btnRemover);
+        
+        return painelBotoes;
+    }
+
+    // Lógica para salvar as alterações
+    private void acaoSalvarAlteracoes(ActionEvent e) {
+        try {
+            // Atualiza o objeto Livro com os novos valores
+            livro.setOpiniao(campoOpiniao.getText());
+            livro.setAvaliacao((Integer) comboAvaliacao.getSelectedItem());
+            
+            String statusSelecionado = (String) comboStatus.getSelectedItem();
+            livro.setStatus(Livro.StatusLeitura.valueOf(statusSelecionado));
+
+            // Salva as mudanças no banco de dados (persiste no arquivo)
+            banco.salvar(); 
+            
+            // Atualiza a tela principal (caso a avaliação ou status mudem, o card pode ser re-renderizado no futuro)
+            telaPrincipal.atualizarAposNovoLivro();
+            
+            JOptionPane.showMessageDialog(this, "Alterações salvas com sucesso!");
+            this.dispose();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao salvar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }
+    
+    // Lógica de remoção e confirmação (inalterada, mas agora usando o novo ActionListener)
+    private void acaoRemoverLivro(ActionEvent e) {
         int confirmacao = JOptionPane.showConfirmDialog(
             this,
-            "Deseja realmente remover este livro?",
-            "Confirmar",
-            JOptionPane.YES_NO_OPTION
+            "Tem certeza que deseja remover '" + livro.getTitulo() + "' da sua biblioteca?",
+            "Confirmar Remoção",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
         );
 
         if (confirmacao == JOptionPane.YES_OPTION) {
-            banco.remover(livro);
+            banco.remover(livro); 
+            telaPrincipal.atualizarAposNovoLivro(); 
             JOptionPane.showMessageDialog(this, "Livro removido com sucesso!");
-            dispose();
+            this.dispose(); 
         }
     }
-} 
+    
+    // --- Métodos de UI Auxiliares ---
+    
+    private void adicionarLabel(JPanel parent, String texto) {
+        JLabel label = new JLabel(texto);
+        label.setFont(new Font("SansSerif", Font.BOLD, 14));
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        parent.add(Box.createRigidArea(new Dimension(0, 10)));
+        parent.add(label);
+    }
+    
+    private <T extends JComponent> void configurarCampo(T componente) {
+        componente.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        componente.setAlignmentX(Component.LEFT_ALIGNMENT);
+        componente.setMaximumSize(new Dimension(450, 30));
+    }
+    
+    private void adicionarLabelCampo(JPanel parent, String labelText, String valueText) {
+        JLabel label = new JLabel("<html><b>" + labelText + "</b> " + valueText + "</html>");
+        label.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        parent.add(label);
+        parent.add(Box.createRigidArea(new Dimension(0, 10)));
+    }
+}

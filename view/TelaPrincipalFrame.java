@@ -51,16 +51,13 @@ public class TelaPrincipalFrame extends JFrame {
         foto.setBorder(BorderFactory.createLineBorder(Color.white, 2));
         side.add(foto);
 
-        side.add(botaoSidebar("Meu Perfil", 180));
-        side.add(botaoSidebar("Minha Biblioteca", 230));
 
         // 🎯 BOTÃO: ADICIONAR LIVROS
-        JButton addBtn = botaoSidebar("Adicionar Livros", 280);
+        JButton addBtn = botaoSidebar("Adicionar Livros", 180);
         addBtn.addActionListener(e -> new AdicionarLivroFrame(TelaPrincipalFrame.this, banco).setVisible(true));
         side.add(addBtn);
 
-        side.add(botaoSidebar("Remover Livros", 330));
-        side.add(botaoSidebar("Configurações", 380));
+        side.add(botaoSidebar("Configurações", 230));
 
         JButton logout = new JButton("Logout");
         logout.setBounds(30, 600, 140, 40);
@@ -176,6 +173,14 @@ public class TelaPrincipalFrame extends JFrame {
         card.setLayout(new BorderLayout());
         card.setBorder(BorderFactory.createLineBorder(VERDE));
         card.setBackground(Color.WHITE);
+
+        card.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Ao clicar, abre a nova tela de detalhes
+                new DetalhesLivroFrame(livro, banco, TelaPrincipalFrame.this).setVisible(true);
+            }
+        });
 
         JPanel capa = new JPanel();
         capa.setBackground(new Color(200, 200, 200));

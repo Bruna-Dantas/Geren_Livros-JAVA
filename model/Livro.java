@@ -1,7 +1,10 @@
 package model;
 
+import java.io.Serializable;
 
-public class Livro {
+public class Livro implements Serializable{
+
+    private static final long serialVersionUID = 1L;
 
     public enum StatusLeitura {
         NAO_INICIADO,
@@ -75,4 +78,9 @@ public class Livro {
         this.caminhoArquivo = caminhoArquivo;
     }
     
+    //Remover livro
+    public void remover(Livro livro) {
+        livros.remove(livro);
+        salvar();
+    }
 }

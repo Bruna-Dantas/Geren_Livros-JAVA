@@ -52,7 +52,7 @@ public class TelaPrincipalFrame extends JFrame {
         side.add(foto);
 
 
-        // 🎯 BOTÃO: ADICIONAR LIVROS
+        // BOTÃO: ADICIONAR LIVROS
         JButton addBtn = botaoSidebar("Adicionar Livros", 180);
         addBtn.addActionListener(e -> new AdicionarLivroFrame(TelaPrincipalFrame.this, banco).setVisible(true));
         side.add(addBtn);
@@ -80,7 +80,7 @@ public class TelaPrincipalFrame extends JFrame {
         return b;
     }
 
-    // 🔹 ÁREA PRINCIPAL
+    // ÁREA PRINCIPAL
     private JPanel criarAreaPrincipal() {
         JPanel area = new JPanel(new BorderLayout());
         area.setBackground(BEGE);
@@ -126,7 +126,7 @@ public class TelaPrincipalFrame extends JFrame {
         return wrapper;
     }
 
-    // 🔹 Atualiza o grid
+    // Atualiza o grid
     public void atualizarGrid(List<Livro> livros) {
         painelLivros.removeAll();
         painelLivros.add(criarCardAdicionar());
@@ -139,12 +139,12 @@ public class TelaPrincipalFrame extends JFrame {
         painelLivros.repaint();
     }
 
-    // 🔹 Atualizar após adicionar livro
+    // Atualizar após adicionar livro
     public void atualizarAposNovoLivro() {
         atualizarGrid(banco.listarTodos());
     }
 
-    // 🔹 CARD de adicionar
+    // CARD de adicionar
     private JPanel criarCardAdicionar() {
         JPanel card = new JPanel();
         card.setPreferredSize(new Dimension(120, 180));
@@ -166,7 +166,7 @@ public class TelaPrincipalFrame extends JFrame {
         return card;
     }
 
-    // 🔹 Card de livro individual
+    // Card de livro individual
     private JPanel criarCardLivro(Livro livro) {
         JPanel card = new JPanel();
         card.setPreferredSize(new Dimension(120, 180));

@@ -23,7 +23,7 @@ public class DetalhesLivroFrame extends JFrame {
         this.telaPrincipal = telaPrincipal;
 
         setTitle("Detalhes: " + livro.getTitulo());
-        setSize(750, 600); // Aumentado para caber mais campos
+        setSize(750, 600); 
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -45,10 +45,8 @@ public class DetalhesLivroFrame extends JFrame {
         // Adiciona o painel de botões no rodapé
         add(criarPainelBotoes(), BorderLayout.SOUTH); 
     }
-    
-    // Método auxiliar para criar e configurar a Capa (inalterado)
+
     private JLabel criarPainelCapa() {
-        // ... (código do criarPainelCapa inalterado)
         JLabel capaLabel = new JLabel();
         capaLabel.setPreferredSize(new Dimension(180, 270));
         capaLabel.setOpaque(true);
@@ -70,10 +68,9 @@ public class DetalhesLivroFrame extends JFrame {
         return capaLabel;
     }
 
-    // Método auxiliar para criar e configurar as Informações (MODIFICADO)
     private JPanel criarPainelInfo() {
         JPanel info = new JPanel();
-        info.setPreferredSize(new Dimension(480, 500)); // Tamanho ajustado
+        info.setPreferredSize(new Dimension(480, 500)); 
         info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
         info.setBackground(Color.decode("#f5f4f0"));
         
@@ -93,7 +90,6 @@ public class DetalhesLivroFrame extends JFrame {
         // Gênero
         adicionarLabelCampo(info, "Gênero:", livro.getGenero());
 
-        // --- Campos EDITÁVEIS ---
         
         // 1. Status de Leitura
         adicionarLabel(info, "Status:");
@@ -178,7 +174,7 @@ public class DetalhesLivroFrame extends JFrame {
         }
     }
     
-    // Lógica de remoção e confirmação (inalterada, mas agora usando o novo ActionListener)
+    // Lógica de remoção e confirmação
     private void acaoRemoverLivro(ActionEvent e) {
         int confirmacao = JOptionPane.showConfirmDialog(
             this,
@@ -196,7 +192,6 @@ public class DetalhesLivroFrame extends JFrame {
         }
     }
     
-    // --- Métodos de UI Auxiliares ---
     
     private void adicionarLabel(JPanel parent, String texto) {
         JLabel label = new JLabel(texto);

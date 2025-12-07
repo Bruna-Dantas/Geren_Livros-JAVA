@@ -49,7 +49,7 @@ public class LoginFrame extends JFrame {
         subtitulo.setBounds(80, 80, 300, 20);
         card.add(subtitulo);
 
-        JLabel lUsuario = new JLabel("USUÁRIO");
+        JLabel lUsuario = new JLabel("EMAIL");
         lUsuario.setFont(new Font("SansSerif", Font.PLAIN, 12));
         lUsuario.setForeground(new Color(80, 80, 80));
         lUsuario.setBounds(80, 140, 200, 20);

@@ -94,7 +94,7 @@ public class DetalhesLivroFrame extends JFrame {
         // 1. Status de Leitura
         adicionarLabel(info, "Status:");
         comboStatus = new JComboBox<>(new String[]{
-            "NAO_INICIADO", "EM_ANDAMENTO", "FINALIZADO"
+            "NAO INICIADO", "EM ANDAMENTO", "FINALIZADO"
         });
         comboStatus.setSelectedItem(livro.getStatus().toString());
         configurarCampo(comboStatus);

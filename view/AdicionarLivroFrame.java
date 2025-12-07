@@ -36,8 +36,6 @@ public class AdicionarLivroFrame extends JFrame {
         painel.setLayout(null);
         painel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true));
         add(painel, BorderLayout.CENTER);
-
-        // --- Configuração dos Campos e Labels (Omitida para concisão) ---
         
         // Título
         JLabel lblTitulo = new JLabel("Título:");
